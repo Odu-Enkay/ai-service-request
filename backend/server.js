@@ -17,6 +17,7 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use(express.json());
 //===== Routes =====//
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Hello! the backend is working!' });
@@ -24,7 +25,7 @@ app.get('/api/test', (req, res) => {
 
 //==== Use the requests router for all /api/requests routes ====//
 app.use('/api/requests', requestsRouter);
-//app.use(express.json());
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
