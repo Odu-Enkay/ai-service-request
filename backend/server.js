@@ -4,6 +4,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+console.log('Loaded env vars:');
+console.log('GMAIL_USER:', process.env.GMAIL_USER);
+console.log('GMAIL_PASS exists?', process.env.GMAIL_PASS ? 'Yes' : 'No');
+
 const app = express();
 const port = process.env.PORT || 3000;
 

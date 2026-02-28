@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { sendConfirmationEmail } = require('../services/emailService');
 
 // Generate unique request number
 function generateRequestNumber() {
@@ -27,15 +28,31 @@ router.post('/', async (req, res) => {
     const requestNumber = generateRequestNumber();
 
     const result = await db.query(
-      `INSERT INTO requests (request_number, name, email, description)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, request_number, created_at`,
+      `INSERT INTO requests (request_number, name, email, description)   
+       VALUES ($1, $2, $3, $4) RETURNING id, request_number,created_at`,
       [requestNumber, name, email, description]
     );
 
+    console.log('New request from DB:', result.rows[0]);
+    console.log('Calling sendConfirmationEmail with trackingId:', result.rows[0].request_number);
+
+
+    const newRequest = result.rows[0];
+
+    // Send confirmation email (do not await; failures are logged internally)
+    // the row property is "request_number" (snake_case), not camelCase.
+    sendConfirmationEmail({
+      to: email,
+      name,
+      trackingId: newRequest.request_number || requestNumber,
+      description,
+    }).catch(err => {
+      console.error('Unhandled background email error:', err);
+    });
+
     res.status(201).json({
       message: 'Request submitted successfully',
-      request: result.rows[0]
+      request: newRequest
     });
 
   } catch (err) {
