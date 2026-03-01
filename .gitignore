@@ -24,3 +24,4 @@ Thumbs.db
 
 # Vite cache
 frontend/node_modules/.vite
+chat.json

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+//const adminRouter = require('./routes/admin');
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const port = process.env.PORT || 3000;
 
 //===== Import Routes =====//
 const requestsRouter = require('./routes/requests');
+const adminRouter = require('./routes/admin');
 
 
 //===== Middleware =====//
@@ -29,6 +31,7 @@ app.get('/api/test', (req, res) => {
 
 //==== Use the requests router for all /api/requests routes ====//
 app.use('/api/requests', requestsRouter);
+app.use('/api/admin', adminRouter);
 
 
 app.listen(port, () => {
