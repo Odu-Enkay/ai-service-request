@@ -61,24 +61,33 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/requests/:id - Public tracking (we'll add later)
-router.get('/:id', async (req, res) => {
+// GET /api/requests/:id - Public tracking no auth required
+router.get('/track/:requestNumber', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { requestNumber } = req.params;
     
     const result = await db.query(
-      `SELECT request_number, name, description, status, created_at 
-       FROM requests WHERE id = $1`,
-      [id]
+      `SELECT 
+        request_number, 
+        name, 
+        description, 
+        status, 
+        created_at,
+        updated_at,
+        resolved_at
+       FROM requests 
+       WHERE request_number = $1`,
+      [requestNumber]
     );
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Request not found' });
     }
 
+    // Don't expose email or other sensitive data
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error fetching request:', err);
+    console.error('Error tracking request:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

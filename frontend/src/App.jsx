@@ -4,6 +4,7 @@ import RequestForm from './components/RequestForm';
 import Login from './pages/admin/Login';
 import Register from './pages/admin/Register';
 import Dashboard from './pages/admin/Dashboard';
+import TrackRequest from './pages/TrackRequest';  
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -33,6 +34,8 @@ function AppContent() {
           </ProtectedRoute>
         } 
       />
+
+      <Route path="/track/:trackingId" element={<TrackRequest />} />
     </Routes>
   );
 }

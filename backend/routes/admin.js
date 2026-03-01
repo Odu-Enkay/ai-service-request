@@ -142,7 +142,7 @@ router.patch("/requests/:id/status", authenticateAdmin, async (req, res) => {
       return res.status(404).json({ error: "Request not found" });
     }
 
-    // After updating status, send email notification
+    // After updating status, this sends email notification
 if (status === 'Resolved' || status === 'In Progress') {
   const { sendStatusUpdateEmail } = require('../services/emailService');
   
