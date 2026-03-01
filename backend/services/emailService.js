@@ -55,6 +55,38 @@ async function sendConfirmationEmail({ to, name, trackingId, description }) {
   }
 }
 
+// function to send status update emails when admin changes request status
+const sendStatusUpdateEmail = async ({ to, name, trackingId, status }) => {
+  try {
+    const statusMessages = {
+      'In Progress': 'is now in progress',
+      'Resolved': 'has been resolved'
+    };
+
+    const html = `
+      <h1>Request Status Update</h1>
+      <p>Hi ${name},</p>
+      <p>Your request <strong>${trackingId}</strong> ${statusMessages[status] || 'has been updated'}.</p>
+      <p>You can track your request here:</p>
+      <p><a href="http://localhost:5173/track/${trackingId}">View Request Status</a></p>
+    `;
+
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to,
+      subject: `Request ${trackingId} ${status}`,
+      html,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Status email sent to ${to}`);
+  } catch (err) {
+    console.error('Error sending status email:', err);
+  }
+};
+
+
 module.exports = {
   sendConfirmationEmail,
+  sendStatusUpdateEmail
 };
