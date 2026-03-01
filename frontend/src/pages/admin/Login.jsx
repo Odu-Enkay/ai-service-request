@@ -1,15 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import API from '../../services/api';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [needsSetup, setNeedsSetup] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // Check if any admin exists
+  useEffect(() => {
+    const checkAdminExists = async () => {
+      try {
+        const response = await API.get('/admin/check');
+        setNeedsSetup(!response.data.hasAdmin);
+        if (!response.data.hasAdmin) {
+          // No admin exists, redirect to registration
+          navigate('/admin/register');
+        }
+      } catch (err) {
+        console.error('Failed to check admin status:', err);
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    checkAdminExists();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,12 +50,29 @@ function Login() {
     setLoading(false);
   };
 
+  if (checking) {
+    return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>;
+  }
+
+  // If needsSetup is true, we're redirecting, so don't render login
+  if (needsSetup) {
+    return null;
+  }
+
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
       <h2>Admin Login</h2>
       
       {error && (
-        <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>
+        <div style={{ 
+          color: '#721c24', 
+          backgroundColor: '#f8d7da',
+          padding: '10px',
+          borderRadius: '4px',
+          marginBottom: '15px'
+        }}>
+          {error}
+        </div>
       )}
       
       <form onSubmit={handleSubmit}>

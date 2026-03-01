@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import RequestForm from './components/RequestForm';
 import Login from './pages/admin/Login';
+import Register from './pages/admin/Register';
 import Dashboard from './pages/admin/Dashboard';
 
 // Protected Route Component
@@ -23,6 +24,7 @@ function AppContent() {
       
       {/* Admin routes */}
       <Route path="/admin/login" element={<Login />} />
+      <Route path="/admin/register" element={<Register />} />
       <Route 
         path="/admin/dashboard" 
         element={
