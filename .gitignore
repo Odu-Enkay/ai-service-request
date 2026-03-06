@@ -26,3 +26,4 @@ Thumbs.db
 frontend/node_modules/.vite
 chat.json
 docs/ai-transcripts/session-log.md
+ai-assisted-transcript.md
