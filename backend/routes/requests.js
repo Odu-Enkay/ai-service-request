@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { sendConfirmationEmail } = require('../services/emailService');
+//const { sendConfirmationEmail } = require('../services/emailService');
+const { sendConfirmationEmail } = require('../services/emailServiceResend');
 const { analyzeDescription } = require('../services/aiService'); 
 
 // Generate unique request number
