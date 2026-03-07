@@ -145,8 +145,8 @@ router.patch("/requests/:id/status", authenticateAdmin, async (req, res) => {
 
     // After updating status, this sends email notification
 if (status === 'Resolved' || status === 'In Progress') {
-  const { sendStatusUpdateEmail } = require('../services/emailService');
-  
+  //const { sendStatusUpdateEmail } = require('../services/emailService');
+  const { sendStatusUpdateEmail } = require('../services/emailServiceResend');
   // Don't await – send in background
   sendStatusUpdateEmail({
     to: result.rows[0].email,
